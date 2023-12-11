@@ -1,39 +1,29 @@
-import java.util.Scanner;
-
 public class ReplaceCommand implements ICommand {
     private final TextEditor _editor;
+    private final int _index;
+    private final int _length;
+    private final String _text;
 
-    public ReplaceCommand(TextEditor editor) {
+    public ReplaceCommand(TextEditor editor, int index, int length, String text) {
         _editor = editor;
+        _index = index;
+        _length = length;
+        _text = text;
     }
 
     @Override
     public void execute() {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.print("Start index: ");
-        String replaceIndexInput = scanner.next();
-        int replaceIndex = _editor.validateNumberInput(replaceIndexInput);
-        if (replaceIndex != -1) {
-            System.out.print("Number of characters to replace: ");
-            String replaceDistanceInput = scanner.next();
-            int replaceDistance = _editor.validateNumberInput(replaceDistanceInput);
-            if (replaceDistance != -1) {
-                System.out.print("Replacement string: ");
-                String replacementString = scanner.next();
-                _editor.deleteInDoc(replaceIndex, replaceDistance);
-                _editor.insertInDoc(replaceIndex, replacementString);
-            }
-        }
+        _editor.doReplace(_index, _length, _text);
     }
 
     @Override
     public void undo() {
-
+        _editor.doDelete(_index, _length);
+        _editor.doInsert(_index, _text);
     }
 
     @Override
     public void redo() {
-
+        _editor.doReplace(_index, _length, _text);
     }
 }

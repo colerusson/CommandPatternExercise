@@ -17,18 +17,18 @@ public class UndoRedoManager {
         execute(command);
     }
 
-    public void insert() {
-        ICommand command = new InsertCommand(editor);
+    public void insert(int position, String text) {
+        ICommand command = new InsertCommand(editor, position, text);
         execute(command);
     }
 
-    public void delete() {
-        ICommand command = new DeleteCommand(editor);
+    public void delete(int position, int length) {
+        ICommand command = new DeleteCommand(editor, position, length);
         execute(command);
     }
 
-    public void replace() {
-        ICommand command = new ReplaceCommand(editor);
+    public void replace(int position, int length, String text) {
+        ICommand command = new ReplaceCommand(editor, position, length, text);
         execute(command);
     }
 

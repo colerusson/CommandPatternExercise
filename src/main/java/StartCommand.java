@@ -7,16 +7,16 @@ public class StartCommand implements ICommand {
 
     @Override
     public void execute() {
-        _editor.clear();
+        _editor.startDoc();
     }
 
     @Override
     public void undo() {
-
+        _editor.closeDoc();
     }
 
     @Override
     public void redo() {
-
+        _editor.startDoc();
     }
 }

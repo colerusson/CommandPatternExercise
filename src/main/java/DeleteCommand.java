@@ -1,38 +1,26 @@
-import java.util.Scanner;
-
 public class DeleteCommand implements ICommand {
     private final TextEditor _editor;
+    private final int _index;
+    private final int _length;
 
-    public DeleteCommand(TextEditor editor) {
+    public DeleteCommand(TextEditor editor, int index, int length) {
         _editor = editor;
+        _index = index;
+        _length = length;
     }
 
     @Override
     public void execute() {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.print("Start index: ");
-        String deletionIndexInput = scanner.next();
-        int deletionIndex = _editor.validateNumberInput(deletionIndexInput);
-        if (deletionIndex != -1) {
-            System.out.print("Number of characters to delete: ");
-            String deletionDistanceInput = scanner.next();
-            int deletionDistance = _editor.validateNumberInput(deletionDistanceInput);
-            if (deletionDistance != -1) {
-                if (_editor.deleteInDoc(deletionIndex, deletionDistance) == null) {
-                    System.out.println("Deletion unsuccessful");
-                }
-            }
-        }
+        _editor.doDelete(_index, _length);
     }
 
     @Override
     public void undo() {
-
+        _editor.doInsert(_index, null);
     }
 
     @Override
     public void redo() {
-
+        _editor.doDelete(_index, _length);
     }
 }

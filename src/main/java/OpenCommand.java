@@ -1,5 +1,3 @@
-import java.util.Scanner;
-
 public class OpenCommand implements ICommand {
     private final TextEditor _editor;
 
@@ -9,20 +7,16 @@ public class OpenCommand implements ICommand {
 
     @Override
     public void execute() {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.print("Name of file to open: ");
-        String openFileName = scanner.next();
-        _editor.openFile(openFileName);
+        _editor.openDoc();
     }
 
     @Override
     public void undo() {
-
+        _editor.closeDoc();
     }
 
     @Override
     public void redo() {
-
+        _editor.openDoc();
     }
 }

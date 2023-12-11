@@ -20,13 +20,13 @@ class TextEditor {
             if (option != -1) {
                 switch (option) {
                     case 1:
-                        insert();
+                        insertInDoc();
                         break;
                     case 2:
-                        delete();
+                        deleteInDoc();
                         break;
                     case 3:
-                        replace();
+                        replaceInDoc();
                         break;
                     case 4:
                         _document.display();
@@ -71,21 +71,12 @@ class TextEditor {
         System.out.println();
         System.out.print("Your selection: ");
     }
-
-    private void insert() {
-        _undoRedoManager.insert();
-    }
-
-    private void delete() {
-        _undoRedoManager.delete();
-    }
-
-    private void replace() {
-        _undoRedoManager.replace();
-    }
-
     private void start() {
         _undoRedoManager.start();
+    }
+
+    private void open() {
+        _undoRedoManager.open();
     }
 
     private void save() {
@@ -94,10 +85,6 @@ class TextEditor {
         System.out.print("Name of file: ");
         String saveFileName = scanner.next();
         _document.save(saveFileName);
-    }
-
-    private void open() {
-        _undoRedoManager.open();
     }
 
     public int validateNumberInput(String input) {
@@ -111,19 +98,62 @@ class TextEditor {
         return selection;
     }
 
-    public void insertInDoc(int insertionIndex, String sequenceInput) {
-        _document.insert(insertionIndex, sequenceInput);
+    public void insertInDoc() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Start index: ");
+        String insertionIndexInput = scanner.next();
+        int insertionIndex = validateNumberInput(insertionIndexInput);
+        if (insertionIndex != -1) {
+            System.out.print("Sequence to insert: ");
+            String sequenceInput = scanner.next();
+            _undoRedoManager.insert(insertionIndex, sequenceInput);
+        }
     }
 
-    public String deleteInDoc(int deletionIndex, int deletionDistance) {
-        return _document.delete(deletionIndex, deletionDistance);
+    public void deleteInDoc() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Start index: ");
+        String deletionIndexInput = scanner.next();
+        int deletionIndex = validateNumberInput(deletionIndexInput);
+        if (deletionIndex != -1) {
+            System.out.print("Number of characters to delete: ");
+            String deletionDistanceInput = scanner.next();
+            int deletionDistance = validateNumberInput(deletionDistanceInput);
+            if (deletionDistance != -1) {
+                _undoRedoManager.delete(deletionIndex, deletionDistance);
+            }
+        }
     }
 
-    public void openFile(String openFileName) {
+    public void replaceInDoc() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Start index: ");
+        String replaceIndexInput = scanner.next();
+        int replaceIndex = validateNumberInput(replaceIndexInput);
+        if (replaceIndex != -1) {
+            System.out.print("Number of characters to replace: ");
+            String replaceDistanceInput = scanner.next();
+            int replaceDistance = validateNumberInput(replaceDistanceInput);
+            if (replaceDistance != -1) {
+                System.out.print("Replacement string: ");
+                String replacementString = scanner.next();
+                _undoRedoManager.replace(replaceIndex, replaceDistance, replacementString);
+            }
+        }
+    }
+
+    public void openDoc() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Name of file to open: ");
+        String openFileName = scanner.next();
         _document.open(openFileName);
     }
 
-    public void clear() {
+    public void startDoc() {
         _document.clear();
     }
 
@@ -133,5 +163,24 @@ class TextEditor {
 
     public void redo() {
         _undoRedoManager.redo();
+    }
+
+    public void doInsert(int index, String sequence) {
+        if (sequence == null) {
+            sequence = _document.sequence().toString();
+        }
+        _document.insert(index, sequence);
+    }
+
+    public void doDelete(int index, int distance) {
+        _document.delete(index, distance);
+    }
+
+    public void doReplace(int index, int distance, String sequence) {
+        _document.delete(index, distance);
+        _document.insert(index, sequence);
+    }
+    public void closeDoc() {
+        System.exit(0);
     }
 }
